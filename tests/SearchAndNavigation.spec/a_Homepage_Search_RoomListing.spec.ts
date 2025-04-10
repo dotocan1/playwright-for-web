@@ -25,7 +25,7 @@ test('Homepage → Search → Room listing', async ({ page }) => {
 
   // press the detais of the seaview room
   const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(1);
-  spanDetails.waitFor();
+  spanDetails.waitFor({ state: "attached" });
   await spanDetails.click();
 
   // select rate to get to booking step

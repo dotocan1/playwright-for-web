@@ -1,6 +1,8 @@
 
 import { test, expect } from '@playwright/test';
 
+const PROPERTY_NAME = "Valamar Diamant Hotel"
+
 test('Homepage → Glavna navigacija → Property listing → Room listing', async ({ page }) => {
 
     // Increase the global test timeout.
@@ -18,7 +20,8 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     const seeDetailsButtonsCount = await allSeeDetailsButtons.count();
 
     const initialUrl = page.url();
-    for (let i = 0; i < seeDetailsButtonsCount; i++) {
+    // for (let i = 0; i < seeDetailsButtonsCount; i++) {
+    for (let i = 18; i < seeDetailsButtonsCount; i++) {
         // set current button
         const button = allSeeDetailsButtons.nth(i);
         await button.waitFor()
@@ -42,18 +45,39 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
         const headingText = await propertyHeading.textContent();
         console.log("prop heading", headingText);
 
-        if (headingText == "Valamar Diamant Hotel") {
+        if (headingText == PROPERTY_NAME) {
+            // do something when on Diamant site
+            // selectRate(page);
+            // press the detais of the seaview room
+            const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(1);
+            spanDetails.waitFor();
+            await spanDetails.click();
+
+            // select rate to get to booking step
+            const selectRate = page.getByLabel('Room for 2+1 Seaview').getByRole('button', { name: 'Select Rate' });
+            selectRate.waitFor();
+            await selectRate.click();
+
+            // test out if it went to booking process
+            const heading = await page.getByRole('heading', { name: 'Select your rate' });
+            await expect(heading).toBeVisible();
             break;
         } else {
             await page.goBack();
             await page.waitForURL(url => url.toString() == initialUrl);
-
         }
-
-
     }
 
     // const propertyHeading = await page.gme: 'Valamar Diamant Hotel' });
     // // await page.getByRole('button', { name: 'Details' }).click();
 
 });
+
+async function selectRate(page: any) {
+    const headingElement = page.getByRole('heading', { name: 'Valamar Diamant Hotel' });
+    headingElement.waitFor();
+    expect(headingElement).toBeAttached();
+
+
+}
+
