@@ -32,7 +32,6 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
 
         // wait for the url to be different from the home page
         await page.waitForURL(url => url.toString() !== initialUrl);
-        await page.waitForLoadState('domcontentloaded');
 
         // wait for loader container to stop loading
         loaderContainer = page.locator('div.loader-container').nth(1);
@@ -48,7 +47,7 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
         } else {
             await page.goBack();
             await page.waitForURL(url => url.toString() == initialUrl);
-            await page.waitForLoadState('domcontentloaded');
+
         }
 
 
