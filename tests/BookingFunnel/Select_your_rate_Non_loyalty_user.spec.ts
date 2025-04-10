@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { url } from 'inspector';
 
 test('Select your rate - Non-loyalty user', async ({ page }) => {
+
+  // Increase the global test timeout.
+  test.setTimeout(120000);
+
   await page.goto('https://www.valamar.com/');
   await page.getByRole('button', { name: 'Accept cookies' }).click();
   await page.getByText('Where to?').click();
@@ -11,9 +16,9 @@ test('Select your rate - Non-loyalty user', async ({ page }) => {
 
   // check days
   const firstDay = page.locator('span.day', { hasText: '23' }).nth(1);
-  firstDay.waitFor();
+  await firstDay.waitFor();
   const secondDay = page.locator('span.day', { hasText: '26' }).nth(1);
-  secondDay.waitFor();
+  await secondDay.waitFor();
   await firstDay.click();
   await secondDay.click();
 
@@ -25,7 +30,7 @@ test('Select your rate - Non-loyalty user', async ({ page }) => {
 
   // press the detais of the seaview room
   const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(1);
-  spanDetails.waitFor({ state: "attached" });
+  await spanDetails.waitFor({ state: "attached" });
   await spanDetails.click();
 
   // select rate to get to booking step
@@ -35,9 +40,21 @@ test('Select your rate - Non-loyalty user', async ({ page }) => {
 
   // test out if it went to booking process
   const heading = await page.getByRole('heading', { name: 'Select your rate' });
-  await expect(heading).toBeVisible();
+  await heading.waitFor({ state: 'visible' })
 
   // START THE SELECT RATE MODULE
+  // console.log('This is the page url', page.url())
+  const bookingUrl = page.url();
 
+  // check if discount checbox is un-checked
+  // locator('.toggle-container')
+  await page.locator('.toggle').click();
+  await page.locator('#group-2 span').click();
+  await page.getByRole('button', { name: 'Make a reservation' }).click();
 
+  await page.waitForURL(url => url.toString() !== bookingUrl);
+
+  const aboutYouHeading = page.getByRole('heading', { name: 'About you' });
+  await aboutYouHeading.waitFor({ state: "visible" });
+  await page.screenshot({ path: 'screenshot.png', fullPage: true });
 });
