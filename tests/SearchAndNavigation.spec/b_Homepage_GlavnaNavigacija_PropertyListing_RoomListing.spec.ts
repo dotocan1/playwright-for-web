@@ -2,6 +2,13 @@
 import { test, expect } from '@playwright/test';
 
 test('Homepage → Glavna navigacija → Property listing → Room listing', async ({ page }) => {
+
+    // Increase the global test timeout.
+    test.setTimeout(120000);
+
+    // set default timeout
+    page.setDefaultTimeout(120000);
+
     await page.goto('https://www.valamar.com/');
     await page.getByRole('button', { name: 'Accept cookies' }).click();
     await page.getByRole('button', { name: 'Hotels & Resorts' }).click();
@@ -15,27 +22,42 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
 
     const initialUrl = page.url();
     for (let i = 0; i < seeDetailsButtonsCount; i++) {
+        // set current button
         const button = allSeeDetailsButtons.nth(i);
-        console.log('this is button: ', button)
+        await button.waitFor({ timeout: 120000 })
 
-        await button.click();
-        await page.waitForURL(url => url.toString() !== initialUrl);
+        // wait for loader container to stop loading
+        let loaderContainer = page.locator('div.loader-container').nth(1);
+        await loaderContainer.waitFor({ state: "hidden" });
+
+        // click the button
+        await button.click({ timeout: 120000 });
+
+        // wait for the url to be different from the home page
+        await page.waitForURL(url => url.toString() !== initialUrl, { timeout: 120000 });
         await page.waitForLoadState('domcontentloaded');
 
-        const propertyHeading = await page.getByRole('heading');
+        // wait for loader container to stop loading
+        loaderContainer = page.locator('div.loader-container').nth(1);
+        await loaderContainer.waitFor({ state: "hidden" });
 
-        // const propertyHeading = await page.getByRole('heading', { name: 'Valamar Diamant Hotel' });
-        const isVisible = propertyHeading.isVisible();
-        if (!isVisible) {
+        const propertyHeading = page.getByRole('heading');
+        await propertyHeading.waitFor();
+        const headingText = await propertyHeading.textContent();
+        console.log("prop heading", headingText);
+
+        if (headingText == "Valamar Diamant Hotel") {
+            break;
+        } else {
             await page.goBack();
-            await page.waitForURL(url => url.toString() == initialUrl);
+            await page.waitForURL(url => url.toString() == initialUrl, { timeout: 120000 });
             await page.waitForLoadState('domcontentloaded');
         }
 
 
     }
 
-
+    // const propertyHeading = await page.gme: 'Valamar Diamant Hotel' });
     // // await page.getByRole('button', { name: 'Details' }).click();
 
 });
