@@ -23,8 +23,8 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     const seeDetailsButtonsCount = await allSeeDetailsButtons.count();
 
     const initialUrl = page.url();
-    // for (let i = 0; i < seeDetailsButtonsCount; i++) {
-    for (let i = 19; i < seeDetailsButtonsCount; i++) {
+    for (let i = 0; i < seeDetailsButtonsCount; i++) {
+        // for (let i = 19; i < seeDetailsButtonsCount; i++) {
         // set current button
         const button = allSeeDetailsButtons.nth(i);
         await button.waitFor()
@@ -92,8 +92,8 @@ async function selectRate(page: any) {
     await spanDetails.click();
 
     // select rate to get to booking step
-    const selectRate = page.getByLabel('Room for 2+1 Seaview').getByRole('button', { name: 'Select Rate' });
-    selectRate.waitFor();
+    const selectRate = page.getByLabel('Room for 2 Seaview').getByRole('button', { name: 'Select Rate' })
+    selectRate.waitFor({ state: "attached" });
     await selectRate.click();
 
     // test out if it went to booking process
