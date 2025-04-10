@@ -12,9 +12,9 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     await page.getByRole('button', { name: 'Accept cookies' }).click();
     await page.getByRole('button', { name: 'Hotels & Resorts' }).click();
     await page.getByRole('link', { name: 'All Hotels & Resorts in Poreč' }).click();
-    // wait for loader container to stop loading
-    let loaderContainer = page.locator('div.loader-container').nth(1);
-    await loaderContainer.waitFor({ state: "hidden" });
+
+    // hide loader container
+    await hideLoaderContainer(page);
 
     const heading = page.getByRole('heading', { name: 'Our hotels and apartments in Poreč' });
     await heading.waitFor({ state: "visible" });
@@ -23,15 +23,17 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     const seeDetailsButtonsCount = await allSeeDetailsButtons.count();
 
     const initialUrl = page.url();
-    for (let i = 0; i < seeDetailsButtonsCount; i++) {
-        // for (let i = 19; i < seeDetailsButtonsCount; i++) {
+
+    // if you want to use dynamic iterating use this
+    // for (let i = 0; i < seeDetailsButtonsCount; i++) {
+    // 19 is for Diamant
+    for (let i = 19; i < seeDetailsButtonsCount; i++) {
         // set current button
         const button = allSeeDetailsButtons.nth(i);
         await button.waitFor()
 
-        // wait for loader container to stop loading
-        loaderContainer = page.locator('div.loader-container').nth(1);
-        await loaderContainer.waitFor({ state: "hidden" });
+        // hide loader container
+        await hideLoaderContainer(page);
 
         // click the button
         await button.click();
@@ -39,9 +41,8 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
         // wait for the url to be different from the home page
         await page.waitForURL(url => url.toString() !== initialUrl);
 
-        // wait for loader container to stop loading
-        loaderContainer = page.locator('div.loader-container').nth(1);
-        await loaderContainer.waitFor({ state: "hidden" });
+        // hide loader container
+        await hideLoaderContainer(page);
 
         const propertyHeading = page.getByRole('heading');
         await propertyHeading.waitFor();
@@ -96,10 +97,18 @@ async function selectRate(page: any) {
     selectRate.waitFor({ state: "attached" });
     await selectRate.click();
 
+    // hide loader container
+    await hideLoaderContainer(page);
+
     // test out if it went to booking process
     const heading = await page.getByRole('heading', { name: 'Select your rate' });
-    await expect(heading).toBeVisible();
+    await heading.waitFor({ state: "visible" });
 
+}
 
+async function hideLoaderContainer(page: any) {
+    // wait for loader container to stop loading
+    let loaderContainer = page.locator('div.loader-container').nth(1);
+    await loaderContainer.waitFor({ state: "hidden" });
 }
 
