@@ -6,9 +6,6 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     // Increase the global test timeout.
     test.setTimeout(120000);
 
-    // set default timeout
-    page.setDefaultTimeout(120000);
-
     await page.goto('https://www.valamar.com/');
     await page.getByRole('button', { name: 'Accept cookies' }).click();
     await page.getByRole('button', { name: 'Hotels & Resorts' }).click();
@@ -24,17 +21,17 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     for (let i = 0; i < seeDetailsButtonsCount; i++) {
         // set current button
         const button = allSeeDetailsButtons.nth(i);
-        await button.waitFor({ timeout: 120000 })
+        await button.waitFor()
 
         // wait for loader container to stop loading
         let loaderContainer = page.locator('div.loader-container').nth(1);
         await loaderContainer.waitFor({ state: "hidden" });
 
         // click the button
-        await button.click({ timeout: 120000 });
+        await button.click();
 
         // wait for the url to be different from the home page
-        await page.waitForURL(url => url.toString() !== initialUrl, { timeout: 120000 });
+        await page.waitForURL(url => url.toString() !== initialUrl);
         await page.waitForLoadState('domcontentloaded');
 
         // wait for loader container to stop loading
@@ -50,7 +47,7 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
             break;
         } else {
             await page.goBack();
-            await page.waitForURL(url => url.toString() == initialUrl, { timeout: 120000 });
+            await page.waitForURL(url => url.toString() == initialUrl);
             await page.waitForLoadState('domcontentloaded');
         }
 
