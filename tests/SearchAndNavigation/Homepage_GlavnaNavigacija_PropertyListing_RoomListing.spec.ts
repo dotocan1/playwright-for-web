@@ -1,5 +1,6 @@
 
 import { test, expect } from '@playwright/test';
+import { hideLoaderContainer } from '../helper-utils/helper-utils';
 
 const PROPERTY_NAME = "Valamar Diamant Hotel"
 
@@ -19,6 +20,7 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     const heading = page.getByRole('heading', { name: 'Our hotels and apartments in Poreč' });
     await heading.waitFor({ state: "visible" });
 
+    // get all "Details" buttons on the webpage
     const allSeeDetailsButtons = page.getByRole('button', { name: 'See details & book' });
     const seeDetailsButtonsCount = await allSeeDetailsButtons.count();
 
@@ -30,7 +32,7 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
     for (let i = 19; i < seeDetailsButtonsCount; i++) {
         // set current button
         const button = allSeeDetailsButtons.nth(i);
-        await button.waitFor()
+        await button.waitFor({ state: "visible" })
 
         // hide loader container
         await hideLoaderContainer(page);
@@ -44,10 +46,10 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
         // hide loader container
         await hideLoaderContainer(page);
 
+        // wait for and save the property heading text(only used if iterating through multiple objects)
         const propertyHeading = page.getByRole('heading');
-        await propertyHeading.waitFor();
+        await propertyHeading.waitFor({ state: "visible" });
         const headingText = await propertyHeading.textContent();
-        console.log("prop heading", headingText);
 
         if (headingText == PROPERTY_NAME) {
             // select rate when on Diamant site
@@ -65,8 +67,7 @@ test('Homepage → Glavna navigacija → Property listing → Room listing', asy
 });
 
 async function selectRate(page: any) {
-    // press the detais of the seaview room
-    // TODO: Need to iterate to get to this nth(3)
+    // press the details of the seaview room
     const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(3);
     spanDetails.waitFor();
     await spanDetails.click();
@@ -80,12 +81,10 @@ async function selectRate(page: any) {
     await page.getByRole('button').filter({ hasText: /^$/ }).click();
 
     // check days
-    const firstDay = page.locator('span.day', { hasText: '23' }).nth(1);
-    firstDay.waitFor();
-    const secondDay = page.locator('span.day', { hasText: '26' }).nth(1);
-    secondDay.waitFor();
-    await firstDay.click();
-    await secondDay.click();
+    await page.locator('span.day', { hasText: '23' }).nth(1).click();
+
+    await page.locator('span.day', { hasText: '26' }).nth(1).click();
+
     await page.getByRole('button', { name: 'Confirm' }).click();
 
     // go to details again
@@ -93,9 +92,7 @@ async function selectRate(page: any) {
     await spanDetails.click();
 
     // select rate to get to booking step
-    const selectRate = page.getByLabel('Room for 2 Seaview').getByRole('button', { name: 'Select Rate' })
-    selectRate.waitFor({ state: "attached" });
-    await selectRate.click();
+    await page.getByLabel('Room for 2 Seaview').getByRole('button', { name: 'Select Rate' }).click();
 
     // hide loader container
     await hideLoaderContainer(page);
@@ -104,11 +101,5 @@ async function selectRate(page: any) {
     const heading = await page.getByRole('heading', { name: 'Select your rate' });
     await heading.waitFor({ state: "visible" });
 
-}
-
-async function hideLoaderContainer(page: any) {
-    // wait for loader container to stop loading
-    let loaderContainer = page.locator('div.loader-container').nth(1);
-    await loaderContainer.waitFor({ state: "hidden" });
 }
 
