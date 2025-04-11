@@ -4,7 +4,7 @@
 import { test, expect } from '@playwright/test';
 import { hideLoaderContainer } from '../helper-utils/helper-utils';
 
-test('test', async ({ page }) => {
+test('Select your rate - Novi loyalty user (registration)', async ({ page }) => {
     await page.goto('https://www.valamar.com/en/choose-rate?accommodationTypeId=249416&propertyId=246985&arrive=2025-06-23&depart=2025-06-26&adults=2&uuid=4xh6THhyxfstu2oLQGciPk');
     // accept cookies
     await page.getByRole('button', { name: 'Accept cookies' }).click();
@@ -64,5 +64,5 @@ test('test', async ({ page }) => {
     const aboutYouHeading = page.getByRole('heading', { name: 'About you' });
     await aboutYouHeading.waitFor({ state: "visible" });
 
-    await page.screenshot({ path: 'reservationScreenshot.png', fullPage: true });
+    await page.screenshot({ path: `screenshots/ReservationAfterRegistrationScreenshot.png`, fullPage: true });
 });
