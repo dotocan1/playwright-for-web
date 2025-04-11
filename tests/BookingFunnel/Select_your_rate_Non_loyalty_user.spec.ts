@@ -15,13 +15,10 @@ test('Select your rate - Non-loyalty user', async ({ page }) => {
   await page.locator('#headlessui-popover-panel-10').getByRole('button').filter({ hasText: /^$/ }).click();
 
   // check days
-  const firstDay = page.locator('span.day', { hasText: '23' }).nth(1);
-  await firstDay.waitFor();
-  const secondDay = page.locator('span.day', { hasText: '26' }).nth(1);
-  await secondDay.waitFor();
-  await firstDay.click();
-  await secondDay.click();
+  await page.locator('span.day', { hasText: '23' }).nth(1).click();
+  await page.locator('span.day', { hasText: '26' }).nth(1).click();
 
+  // enter guests data
   await page.getByPlaceholder(' ', { exact: true }).click();
   await page.locator('.children-add').first().click();
   await page.getByRole('button', { name: 'Enter age' }).click();

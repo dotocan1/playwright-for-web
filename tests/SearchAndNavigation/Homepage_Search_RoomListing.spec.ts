@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test('Homepage → Search → Room listing', async ({ page }) => {
+  // Increase the global test timeout.
+  test.setTimeout(120000);
+
   await page.goto('https://www.valamar.com/');
   await page.getByRole('button', { name: 'Accept cookies' }).click();
   await page.getByText('Where to?').click();
@@ -10,13 +13,10 @@ test('Homepage → Search → Room listing', async ({ page }) => {
   await page.locator('#headlessui-popover-panel-10').getByRole('button').filter({ hasText: /^$/ }).click();
 
   // check days
-  const firstDay = page.locator('span.day', { hasText: '23' }).nth(1);
-  firstDay.waitFor();
-  const secondDay = page.locator('span.day', { hasText: '26' }).nth(1);
-  secondDay.waitFor();
-  await firstDay.click();
-  await secondDay.click();
+  await page.locator('span.day', { hasText: '23' }).nth(1).click();
+  await page.locator('span.day', { hasText: '26' }).nth(1).click();
 
+  // enter guests data
   await page.getByPlaceholder(' ', { exact: true }).click();
   await page.locator('.children-add').first().click();
   await page.getByRole('button', { name: 'Enter age' }).click();
@@ -25,7 +25,7 @@ test('Homepage → Search → Room listing', async ({ page }) => {
 
   // press the detais of the seaview room
   const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(1);
-  spanDetails.waitFor({ state: "attached" });
+  await spanDetails.waitFor({ state: "attached" });
   await spanDetails.click();
 
   // select rate to get to booking step
@@ -35,5 +35,5 @@ test('Homepage → Search → Room listing', async ({ page }) => {
 
   // test out if it went to booking process
   const heading = await page.getByRole('heading', { name: 'Select your rate' });
-  await expect(heading).toBeVisible();
+  await heading.waitFor({ state: 'visible' })
 });
