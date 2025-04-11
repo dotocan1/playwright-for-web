@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { url } from 'inspector';
 import { goToCart, goToCartQuick } from '../../helper-utils/helper-utils';
 
-test('Select your rate - Non-loyalty user', async ({ page }) => {
+test('About you -  Non-loyalty user', async ({ page }) => {
   // Increase the global test timeout.
   test.setTimeout(120000);
 
@@ -37,5 +37,10 @@ test('Select your rate - Non-loyalty user', async ({ page }) => {
   await page.getByRole('button', { name: 'Continue to payment' }).click();
   await page.getByRole('textbox', { name: '+385 Mobile phone number' }).fill('14231423');
   await page.getByRole('button', { name: 'Continue to payment' }).click();
+
+  const paymentHeading = page.getByRole('heading', { name: 'Payment Guarantee' });
+  await paymentHeading.waitFor({ state: "visible" });
+
+  await page.screenshot({ path: `screenshots/About_You_Non_loyalty_user_Screenshot.png`, fullPage: true });
 
 });
