@@ -12,10 +12,7 @@ test('Select your rate - Non-loyalty user', async ({ page }) => {
   // START THE SELECT RATE MODULE
   // console.log('This is the page url', page.url())
   const bookingUrl = page.url();
-
-  // check if discount checbox is un-checked
-  // locator('.toggle-container')
-  await page.locator('.toggle').click();
+  
   await page.locator('#group-2 span').click();
   await page.getByRole('button', { name: 'Make a reservation' }).click();
 
