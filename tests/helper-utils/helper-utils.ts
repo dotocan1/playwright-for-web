@@ -41,7 +41,24 @@ export async function goToCart(page: any) {
 }
 
 export async function goToCartQuick(page: any) {
-    await page.goto('https://www.valamar.com/en/hotels-porec/valamar-diamant-hotel/book-rooms?arrive=2025-06-23&depart=2025-06-26');
+
+    // fill in custom values for the URL
+    // WARNING: Room availability isnt promised
+
+    const arrival = {
+        year: "2025",
+        day: "23",
+        month: "06"
+    }
+
+
+    const departure = {
+        year: "2025",
+        day: "26",
+        month: "06"
+    }
+
+    await page.goto(`https://www.valamar.com/en/hotels-porec/valamar-diamant-hotel/book-rooms?arrive=${arrival.year}-${arrival.month}-${arrival.day}&depart=${departure.year}-${departure.month}-${departure.day}`);
 
 
     await page.getByRole('button', { name: 'Accept cookies' }).click();
