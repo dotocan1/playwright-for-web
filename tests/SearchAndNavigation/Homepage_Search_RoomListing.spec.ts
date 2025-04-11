@@ -30,7 +30,7 @@ test('Homepage → Search → Room listing', async ({ page }) => {
 
   // select rate to get to booking step
   const selectRate = page.getByLabel('Room for 2+1 Seaview').getByRole('button', { name: 'Select Rate' });
-  selectRate.waitFor();
+  await selectRate.waitFor();
   await selectRate.click();
 
   // test out if it went to booking process

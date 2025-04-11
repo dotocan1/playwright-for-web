@@ -2,12 +2,15 @@
 // https://www.valamar.com/en/hotels-porec/valamar-diamant-hotel/book-rooms?arrive=2025-06-23&depart=2025-06-26&roomanchor=249416
 
 import { test, expect } from '@playwright/test';
-import { hideLoaderContainer } from '../helper-utils/helper-utils';
+import { goToCartQuick, hideLoaderContainer } from '../helper-utils/helper-utils';
 
 test('Select your rate - Novi loyalty user (registration)', async ({ page }) => {
-    await page.goto('https://www.valamar.com/en/choose-rate?accommodationTypeId=249416&propertyId=246985&arrive=2025-06-23&depart=2025-06-26&adults=2&uuid=4xh6THhyxfstu2oLQGciPk');
-    // accept cookies
-    await page.getByRole('button', { name: 'Accept cookies' }).click();
+
+    // Increase the global test timeout.
+    test.setTimeout(120000);
+
+    await goToCartQuick(page);
+
     await page.getByRole('button', { name: 'Log in' }).click();
     await page.getByRole('button', { name: 'Join us' }).click();
 

@@ -32,8 +32,31 @@ export async function goToCart(page: any) {
 
     // select rate to get to booking step
     const selectRate = page.getByLabel('Room for 2+1 Seaview').getByRole('button', { name: 'Select Rate' });
-    selectRate.waitFor();
+    await selectRate.waitFor();
     await selectRate.click();
+
+    // test out if it went to booking process
+    const heading = await page.getByRole('heading', { name: 'Select your rate' });
+    await heading.waitFor({ state: 'visible' })
+}
+
+export async function goToCartQuick(page: any) {
+    await page.goto('https://www.valamar.com/en/hotels-porec/valamar-diamant-hotel/book-rooms?arrive=2025-06-23&depart=2025-06-26');
+
+
+    await page.getByRole('button', { name: 'Accept cookies' }).click();
+
+    // press the detais of the seaview room
+    const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(1);
+    await spanDetails.waitFor({ state: "attached" });
+    await spanDetails.click();
+
+    // select rate to get to booking step
+    const selectRate = page.getByLabel('Room for').getByRole('button', { name: 'Select Rate' });
+    await selectRate.waitFor();
+    await selectRate.click();
+
+    await hideLoaderContainer(page);
 
     // test out if it went to booking process
     const heading = await page.getByRole('heading', { name: 'Select your rate' });
