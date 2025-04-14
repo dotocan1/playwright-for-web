@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { url } from 'inspector';
-import { goToCart, goToCartQuick, hideLoaderContainer } from '../../helper-utils/helper-utils';
+import { goToCart, goToCartQuick, hideLoaderContainer, fillInData } from '../../helper-utils/helper-utils';
 
 test('About you -  Non-loyalty user', async ({ page }) => {
   // Increase the global test timeout.
@@ -57,19 +57,3 @@ test('About you -  Non-loyalty user', async ({ page }) => {
   await page.screenshot({ path: `screenshots/About_you_Non_loyalty_user_odabran_loyalty_rate.png`, fullPage: true });
 
 });
-
-async function fillInData(page: Page) {
-  await page.getByRole('textbox', { name: 'E-mail address' }).fill('testnimail14231423@gmail.com');
-  await page.getByRole('button', { name: 'I don′t want to specify' }).click();
-  await page.getByRole('textbox', { name: 'First Name' }).fill('FirstName');
-  await page.getByRole('textbox', { name: 'Last Name' }).fill('LastName');
-  await page.getByRole('textbox', { name: 'Date of birth' }).fill('01.12.1998y');
-  await page.getByRole('button', { name: 'Country' }).click();
-  await page.getByRole('option', { name: 'Croatia' }).click();
-  await page.getByRole('button', { name: 'Have special requests?' }).click();
-  await page.locator('textarea').click();
-  await page.locator('textarea').fill('ovo je test');
-  await page.getByRole('button', { name: 'Continue to payment' }).click();
-  await page.getByRole('textbox', { name: '+385 Mobile phone number' }).fill('14231423');
-
-}

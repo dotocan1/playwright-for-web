@@ -122,3 +122,18 @@ export async function LoginUser(page: Page) {
     // go to cart
     await goToCartQuick(page);
 }
+
+export async function fillInData(page: Page) {
+    await page.getByRole('textbox', { name: 'E-mail address' }).fill('testnimail14231423@gmail.com');
+    await page.getByRole('button', { name: 'I don′t want to specify' }).click();
+    await page.getByRole('textbox', { name: 'First Name' }).fill('FirstName');
+    await page.getByRole('textbox', { name: 'Last Name' }).fill('LastName');
+    await page.getByRole('textbox', { name: 'Date of birth' }).fill('01.12.1998y');
+    await page.getByRole('button', { name: 'Country' }).click();
+    await page.getByRole('option', { name: 'Croatia' }).click();
+    await page.getByRole('button', { name: 'Have special requests?' }).click();
+    await page.locator('textarea').click();
+    await page.locator('textarea').fill('ovo je test');
+    await page.getByRole('button', { name: 'Continue to payment' }).click();
+    await page.getByRole('textbox', { name: '+385 Mobile phone number' }).fill('14231423');
+}
