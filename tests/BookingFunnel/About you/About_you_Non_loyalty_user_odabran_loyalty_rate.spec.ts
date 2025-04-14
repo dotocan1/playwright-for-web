@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { url } from 'inspector';
-import { goToCart, goToCartQuick } from '../../helper-utils/helper-utils';
+import { goToCart, goToCartQuick, hideLoaderContainer } from '../../helper-utils/helper-utils';
 
 test('About you -  Non-loyalty user', async ({ page }) => {
   // Increase the global test timeout.
@@ -13,10 +13,8 @@ test('About you -  Non-loyalty user', async ({ page }) => {
   // console.log('This is the page url', page.url())
   const bookingUrl = page.url();
 
-  // turn discount on
-  await page.locator('.toggle').click();
-
   await page.locator('#group-2 span').click();
+
   await page.getByRole('button', { name: 'Make a reservation' }).click();
 
   await page.waitForURL(url => url.toString() !== bookingUrl);
@@ -29,6 +27,28 @@ test('About you -  Non-loyalty user', async ({ page }) => {
   // fill in data
   await fillInData(page);
 
+  await page.locator('form').getByRole('img').nth(2).click();
+
+  await hideLoaderContainer(page);
+
+
+  await page.goBack();
+
+  await page.locator('.toggle').click();
+
+  await page.getByRole('button', { name: 'Make a reservation' }).click();
+
+  await page.waitForURL(url => url.toString() !== bookingUrl);
+
+  await aboutYouHeading.waitFor({ state: "visible" });
+
+  // fill in data again
+  await fillInData(page);
+  await page.getByRole('button', { name: 'Continue to payment' }).click();
+
+  const bookingUrlAfter = page.url();
+  await page.waitForURL(url => url.toString() !== bookingUrlAfter);
+
   const paymentHeading = page.getByRole('heading', { name: 'Payment Guarantee' });
   await paymentHeading.waitFor({ state: "visible" });
 
@@ -36,20 +56,19 @@ test('About you -  Non-loyalty user', async ({ page }) => {
 
 });
 
-
-
-async function fillInData(page: any) {
+async function fillInData(page: Page) {
+  await page.once
   await page.getByRole('textbox', { name: 'E-mail address' }).fill('testnimail14231423@gmail.com');
   await page.getByRole('button', { name: 'I don′t want to specify' }).click();
   await page.getByRole('textbox', { name: 'First Name' }).fill('FirstName');
   await page.getByRole('textbox', { name: 'Last Name' }).fill('LastName');
   await page.getByRole('textbox', { name: 'Date of birth' }).fill('01.12.1998y');
-  await page.getByRole('button', { name: 'Country Select country' }).click();
+  await page.getByRole('button', { name: 'Country' }).click();
   await page.getByRole('option', { name: 'Croatia' }).click();
   await page.getByRole('button', { name: 'Have special requests?' }).click();
   await page.locator('textarea').click();
   await page.locator('textarea').fill('ovo je test');
   await page.getByRole('button', { name: 'Continue to payment' }).click();
   await page.getByRole('textbox', { name: '+385 Mobile phone number' }).fill('14231423');
-  await page.getByRole('button', { name: 'Continue to payment' }).click();
+
 }
