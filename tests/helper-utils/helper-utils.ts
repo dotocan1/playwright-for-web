@@ -1,3 +1,5 @@
+import { Page } from "@playwright/test";
+
 export async function hideLoaderContainer(page: any) {
     // wait for loader container to stop loading
     let loaderContainer = page.locator('div.loader-container').nth(1);
@@ -40,7 +42,7 @@ export async function goToCart(page: any) {
     await heading.waitFor({ state: 'visible' })
 }
 
-export async function goToCartQuick(page: any) {
+export async function goToCartQuick(page: Page) {
 
     // fill in custom values for the URL
     // WARNING: Room availability isnt promised
@@ -60,8 +62,11 @@ export async function goToCartQuick(page: any) {
 
     await page.goto(`https://www.valamar.com/en/hotels-porec/valamar-diamant-hotel/book-rooms?arrive=${arrival.year}-${arrival.month}-${arrival.day}&depart=${departure.year}-${departure.month}-${departure.day}`);
 
-
-    await page.getByRole('button', { name: 'Accept cookies' }).click();
+    // if accept cookies is visible, click it
+    const acceptCookies = page.getByRole('button', { name: 'Accept cookies' });
+    if (await acceptCookies.isVisible()) {
+        await acceptCookies.click();
+    }
 
     // press the detais of the seaview room
     const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(1);
