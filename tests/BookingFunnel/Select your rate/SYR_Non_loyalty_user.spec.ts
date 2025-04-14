@@ -20,5 +20,5 @@ test('Select your rate - Non-loyalty user', async ({ page }) => {
 
   const aboutYouHeading = page.getByRole('heading', { name: 'About you' });
   await aboutYouHeading.waitFor({ state: "visible" });
-  await page.screenshot({ path: 'aboutYouScreenshot.png', fullPage: true });
+  await page.screenshot({ path: 'screenshots/SYR_Non_loyalty_user.png', fullPage: true });
 });

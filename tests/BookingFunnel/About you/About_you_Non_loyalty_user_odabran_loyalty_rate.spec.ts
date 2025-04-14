@@ -27,13 +27,15 @@ test('About you -  Non-loyalty user', async ({ page }) => {
   // fill in data
   await fillInData(page);
 
+  // remove discount
   await page.locator('form').getByRole('img').nth(2).click();
 
   await hideLoaderContainer(page);
 
-
+  // go back to remove the discount
   await page.goBack();
 
+  // remove discount
   await page.locator('.toggle').click();
 
   await page.getByRole('button', { name: 'Make a reservation' }).click();
@@ -52,12 +54,11 @@ test('About you -  Non-loyalty user', async ({ page }) => {
   const paymentHeading = page.getByRole('heading', { name: 'Payment Guarantee' });
   await paymentHeading.waitFor({ state: "visible" });
 
-  await page.screenshot({ path: `screenshots/About_You_Non_loyalty_user_Screenshot.png`, fullPage: true });
+  await page.screenshot({ path: `screenshots/About_you_Non_loyalty_user_odabran_loyalty_rate.png`, fullPage: true });
 
 });
 
 async function fillInData(page: Page) {
-  await page.once
   await page.getByRole('textbox', { name: 'E-mail address' }).fill('testnimail14231423@gmail.com');
   await page.getByRole('button', { name: 'I don′t want to specify' }).click();
   await page.getByRole('textbox', { name: 'First Name' }).fill('FirstName');

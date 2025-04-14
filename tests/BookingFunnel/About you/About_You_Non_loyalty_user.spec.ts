@@ -32,7 +32,7 @@ test('About you -  Non-loyalty user', async ({ page }) => {
   const paymentHeading = page.getByRole('heading', { name: 'Payment Guarantee' });
   await paymentHeading.waitFor({ state: "visible" });
 
-  await page.screenshot({ path: `screenshots/About_You_Non_loyalty_user_Screenshot.png`, fullPage: true });
+  await page.screenshot({ path: `screenshots/About_You_Non_loyalty_user.png`, fullPage: true });
 
 });
 

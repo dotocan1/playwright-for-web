@@ -67,5 +67,5 @@ test('Select your rate - Novi loyalty user (registration)', async ({ page }) => 
     const aboutYouHeading = page.getByRole('heading', { name: 'About you' });
     await aboutYouHeading.waitFor({ state: "visible" });
 
-    await page.screenshot({ path: `screenshots/ReservationAfterRegistrationScreenshot.png`, fullPage: true });
+    await page.screenshot({ path: `screenshots/SYR_Novi_loyalty_user_registration.png`, fullPage: true });
 });
