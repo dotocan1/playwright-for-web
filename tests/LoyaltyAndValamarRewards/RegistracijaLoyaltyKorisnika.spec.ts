@@ -34,7 +34,6 @@ test('Registracija Loyalty Korisnika', async ({ page }) => {
 
     // test out to see if redirected to home page
     const heading = page.getByRole('heading', { name: 'Holiday as you are' });
-    await heading.waitFor();
     await expect(heading).toBeVisible();
     await page.screenshot({ path: `screenshots/RegistracijaLoyaltyKorisnika.png`, fullPage: false });
 });
