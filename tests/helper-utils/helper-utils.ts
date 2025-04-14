@@ -1,6 +1,7 @@
-import { Page } from "@playwright/test";
+import { Page, expect } from "@playwright/test";
 
 export async function hideLoaderContainer(page: any) {
+
     // wait for loader container to stop loading
     let loaderContainer = page.locator('div.loader-container').nth(1);
     await loaderContainer.waitFor({ state: "hidden" });
@@ -60,7 +61,9 @@ export async function goToCartQuick(page: Page) {
         month: "06"
     }
 
-    await page.goto(`https://www.valamar.com/en/hotels-porec/valamar-diamant-hotel/book-rooms?arrive=${arrival.year}-${arrival.month}-${arrival.day}&depart=${departure.year}-${departure.month}-${departure.day}`);
+    const url = `https://www.valamar.com/en/hotels-porec/valamar-diamant-hotel/book-rooms?arrive=${arrival.year}-${arrival.month}-${arrival.day}&depart=${departure.year}-${departure.month}-${departure.day}`;
+
+    await page.goto(url);
 
     // if accept cookies is visible, click it
     const acceptCookies = page.getByRole('button', { name: 'Accept cookies' });
@@ -83,4 +86,39 @@ export async function goToCartQuick(page: Page) {
     // test out if it went to booking process
     const heading = await page.getByRole('heading', { name: 'Select your rate' });
     await heading.waitFor({ state: 'visible' })
+}
+
+export async function LoginUser(page: Page) {
+    await page.goto('https://www.valamar.com/');
+    await page.getByRole('button', { name: 'Accept cookies' }).click();
+    await page.locator("#azureb2c-login").click();
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await page.getByRole('textbox', { name: 'E-mail or loyalty card number' }).click();
+    // exchange to await page.pause(); if using a different email
+    await page.getByRole('textbox', { name: 'E-mail or loyalty card number' }).fill('selective.tortoise.vmfk@letterhaven.net');
+    await page.getByRole('textbox', { name: 'Password' }).click();
+
+    // change to await pause() if you are using a different password
+    await page.getByRole('textbox', { name: 'Password' }).fill('$Lalal1423');
+
+    // set up the wait for the auth request
+    const responsePromise = page.waitForResponse(response =>
+        response.url().includes('oauth2/v2.0/token') && response.status() === 200
+    );
+
+    await page.getByRole('button', { name: 'Sign in' }).click();
+
+    // wait for the auth request to go through
+    const response = await responsePromise;
+
+    // test out to see if redirected to home page
+    const heading = page.getByRole('heading', { name: 'Holiday as you are' });
+    await expect(heading).toBeVisible();
+
+    await page.waitForTimeout(2000);
+
+    // stops working here
+
+    // go to cart
+    await goToCartQuick(page);
 }
