@@ -65,12 +65,12 @@ export async function goToCartQuick(page: Page) {
 
     await page.goto(url);
 
-    // if accept cookies is visible, click it
-    const acceptCookies = page.getByRole('button', { name: 'Accept cookies' });
-    if (await acceptCookies.isVisible()) {
-        await acceptCookies.click();
+    try {
+        await acceptCookies(page);
     }
-
+    catch (error) {
+        await acceptCookies(page);
+    }
     // press the detais of the seaview room
     const spanDetails = page.locator('span.app-text', { hasText: 'Details' }).nth(1);
     await spanDetails.waitFor({ state: "attached" });
@@ -136,4 +136,21 @@ export async function fillInData(page: Page) {
     await page.locator('textarea').fill('ovo je test');
     await page.getByRole('button', { name: 'Continue to payment' }).click();
     await page.getByRole('textbox', { name: '+385 Mobile phone number' }).fill('14231423');
+}
+
+async function acceptCookies(page, retries = 5) {
+    try {
+        const acceptButton = page.getByRole('button', { name: 'Accept cookies' });
+        if (await acceptButton.isVisible()) {
+            await acceptButton.click();
+        }
+    }
+    catch (error) {
+        if (retries > 0) {
+            await acceptCookies(page, retries - 1);
+        } else {
+            console.error('Failed to accept cookies after multiple attempts:', error);
+            throw error;
+        }
+    }
 }
