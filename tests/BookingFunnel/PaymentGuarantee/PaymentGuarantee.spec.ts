@@ -3,7 +3,7 @@ import { url } from 'inspector';
 import { goToCart, goToCartQuick, fillInData } from '../../helper-utils/helper-utils';
 const fs = require('fs'); // Import the file system module
 
-test('teeeeeeeeeeeeeeeeeeeeeeest', async ({ page }) => {
+test('Payment Guarantee', async ({ page }) => {
   // Increase the global test timeout.
   test.setTimeout(120000);
 
@@ -44,6 +44,7 @@ test('teeeeeeeeeeeeeeeeeeeeeeest', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Confirm reservation' }).click();
 
+  // BOOKING CONFIRMATION MODULE STARTS HERE
 
   await page.getByRole('button', { name: 'Reservation details' }).click();
   const reservation = page.getByText('Reservation number: ');
@@ -58,7 +59,7 @@ test('teeeeeeeeeeeeeeeeeeeeeeest', async ({ page }) => {
   const filePath = 'reservations.txt'; // Define the target file
 
   // Append the text to the file
-  fs.appendFile(filePath, reservationCode, (err) => {
+  fs.appendFile(filePath, '\n' + reservationCode + '\n', (err) => {
     if (err) {
       // If an error occurred, log the error
       console.error('Error appending to file:', err);
@@ -68,7 +69,7 @@ test('teeeeeeeeeeeeeeeeeeeeeeest', async ({ page }) => {
     }
   });
 
-  await page.screenshot({ path: `screenshots/payment.png`, fullPage: true });
+  await page.screenshot({ path: `screenshots/PaymentGuarantee.png`, fullPage: true });
 
 });
 
