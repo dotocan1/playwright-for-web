@@ -3,7 +3,7 @@ import { url } from 'inspector';
 import { goToCart, goToCartQuick, fillInData, acceptCookies } from '../../helper-utils/helper-utils';
 const fs = require('fs'); // Import the file system module
 
-test('Payment Guarantee', async ({ page }) => {
+test('BookingConfirmation', async ({ page }) => {
   // Increase the global test timeout.
   test.setTimeout(120000);
 
@@ -48,9 +48,19 @@ test('Payment Guarantee', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Reservation details' }).waitFor({ state: "visible" });
 
+
+
+  // BOOKING CONFIRMATION MODULE STARTS HERE
+
   await page.getByRole('button', { name: 'Reservation details' }).click();
   const reservation = page.getByText('Reservation number: ');
   const reservationCode = await reservation.textContent();
+
+  await page.getByRole('button', { name: 'Included in the price' }).click();
+  await page.getByRole('button', { name: 'Booking Policies' }).click();
+  await page.getByRole('button', { name: 'Getting here' }).click();
+  // press again to close it
+  // await page.getByRole('button', { name: 'Getting here' }).click();
 
   const filePath = 'reservations.txt'; // Define the target file
 
@@ -65,7 +75,8 @@ test('Payment Guarantee', async ({ page }) => {
     }
   });
 
-  await page.screenshot({ path: `screenshots/PaymentGuarantee.png`, fullPage: true });
+  await page.screenshot({ path: `screenshots/BookingConfirmation.png`, fullPage: true });
+
 });
 
 

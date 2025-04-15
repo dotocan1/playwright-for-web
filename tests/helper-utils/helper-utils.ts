@@ -138,7 +138,7 @@ export async function fillInData(page: Page) {
     await page.getByRole('textbox', { name: '+385 Mobile phone number' }).fill('14231423');
 }
 
-async function acceptCookies(page, retries = 5) {
+export async function acceptCookies(page, retries = 5) {
     try {
         const acceptButton = page.getByRole('button', { name: 'Accept cookies' });
         if (await acceptButton.isVisible()) {
